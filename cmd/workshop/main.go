@@ -4,9 +4,9 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/soypita/go-workshop/internals/handler"
-
 	"github.com/go-chi/chi"
+
+	"github.com/soypita/go-workshop/internals/handler"
 )
 
 func main() {
@@ -14,6 +14,8 @@ func main() {
 	r := chi.NewRouter()
 	r.Get("/hello", h.Hello)
 
+	log.Println("Starting server")
 	err := http.ListenAndServe(":8080", r)
 	log.Fatal(err)
+	log.Println("Server shutting down")
 }
