@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/soypita/go-workshop/internal/handler"
+	"github.com/soypita/go-workshop/internals/handler"
 
 	"github.com/go-chi/chi"
 )
