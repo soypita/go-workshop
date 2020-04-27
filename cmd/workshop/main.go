@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	h := handler.NewHandler()
+	h := handler.NewSimpleHandler()
 	r := chi.NewRouter()
 	r.Get("/hello", h.Hello)
 
