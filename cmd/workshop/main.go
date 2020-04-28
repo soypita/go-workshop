@@ -7,6 +7,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/ilyakaznacheev/cleanenv"
 
+	"github.com/soypita/go-workshop/internals/api/jokes"
 	"github.com/soypita/go-workshop/internals/config"
 	"github.com/soypita/go-workshop/internals/handler"
 )
@@ -17,6 +18,9 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	apiClient := jokes.NewJokeClient(cfg.JokeURL)
+
 	h := handler.NewSimpleHandler()
 	r := chi.NewRouter()
 	r.Get("/hello", h.Hello)
