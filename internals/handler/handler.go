@@ -23,5 +23,5 @@ func (h *SimpleHandler) Hello(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
-	fmt.Fprint(w, joke)
+	fmt.Fprint(w, joke.Joke)
 }
