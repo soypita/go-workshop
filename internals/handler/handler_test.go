@@ -1,4 +1,4 @@
-package handler
+package handler_test
 
 import (
 	"io/ioutil"
@@ -8,6 +8,7 @@ import (
 
 	"github.com/soypita/go-workshop/internals/api"
 	"github.com/soypita/go-workshop/internals/api/mocks"
+	"github.com/soypita/go-workshop/internals/handler"
 )
 
 func TestSimpleHandler_Hello(t *testing.T) {
@@ -33,9 +34,7 @@ func TestSimpleHandler_Hello(t *testing.T) {
 				Joke: tt.joke,
 			}, tt.err)
 
-			h := &SimpleHandler{
-				jokeClient: apiMock,
-			}
+			h := handler.NewSimpleHandler(apiMock)
 
 			req, _ := http.NewRequest("GET", "/hello", nil)
 			rr := httptest.NewRecorder()
