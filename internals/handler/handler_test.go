@@ -1,33 +1,59 @@
 package handler
 
 import (
+	"io/ioutil"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/soypita/go-workshop/internals/api"
+	"github.com/soypita/go-workshop/internals/api/mocks"
 )
 
 func TestSimpleHandler_Hello(t *testing.T) {
-	type fields struct {
-		jokeClient api.Client
-	}
-	type args struct {
-		w http.ResponseWriter
-		r *http.Request
-	}
 	tests := []struct {
-		name   string
-		fields fields
-		args   args
+		name     string
+		joke     string
+		err      error
+		codeWant int
+		bodyWant string
 	}{
-		// TODO: Add test cases.
+		{
+			name:     "simple test",
+			joke:     "test joke",
+			err:      nil,
+			codeWant: 200,
+			bodyWant: "test joke",
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
+			apiMock := &mocks.Client{}
+			apiMock.On("GetJoke").Return(&api.JokeResponse{
+				Joke: tt.joke,
+			}, tt.err)
+
 			h := &SimpleHandler{
-				jokeClient: tt.fields.jokeClient,
+				jokeClient: apiMock,
 			}
-			h.Hello(tt.args.w, tt.args.r)
+
+			req, _ := http.NewRequest("GET", "/hello", nil)
+			rr := httptest.NewRecorder()
+
+			h.Hello(rr, req)
+
+			// handler := http.HandlerFunc(h.Hello)
+			// handler.ServeHTTP(rr, req)
+
+			gotRaw, _ := ioutil.ReadAll(rr.Body)
+			got := string(gotRaw)
+			if got != tt.bodyWant {
+				t.Errorf("Response body wrong %s want %s", got, tt.bodyWant)
+			}
+
+			if status := rr.Result().StatusCode; status != tt.codeWant {
+				t.Errorf("Response status wrong %d want %d", status, tt.codeWant)
+			}
 		})
 	}
 }
