@@ -5,17 +5,28 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi"
+	"github.com/ilyakaznacheev/cleanenv"
 
+	"github.com/soypita/go-workshop/internals/config"
 	"github.com/soypita/go-workshop/internals/handler"
 )
 
 func main() {
+	cfg := config.ServerConfig{}
+	err := cleanenv.ReadConfig("config.yml", &cfg)
+	if err != nil {
+		log.Fatal(err)
+	}
 	h := handler.NewSimpleHandler()
 	r := chi.NewRouter()
 	r.Get("/hello", h.Hello)
 
+	path := cfg.Host + ":" + cfg.Port
 	log.Println("Starting server")
-	err := http.ListenAndServe(":8080", r)
-	log.Fatal(err)
+
+	err = http.ListenAndServe(path, r)
+	if err != nil {
+		log.Fatal(err)
+	}
 	log.Println("Server shutting down")
 }
